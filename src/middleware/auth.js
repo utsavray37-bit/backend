@@ -23,10 +23,12 @@ export function requireAuth(role) {
 }
 
 export function setAuthCookie(res, token) {
-  const secure = String(process.env.COOKIE_SECURE).toLowerCase() === 'true';
+  const isProduction = process.env.NODE_ENV === 'production';
+  const secure = isProduction || String(process.env.COOKIE_SECURE).toLowerCase() === 'true';
+  
   res.cookie('token', token, {
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: isProduction ? 'none' : 'lax',
     secure,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   });
