@@ -59,9 +59,18 @@ router.get('/stats', getStats);
 router.post(
   '/students',
   [
-    body('name').isString().trim().notEmpty(),
-    body('enrollmentNumber').isString().trim().notEmpty(),
-    body('password').isString().isLength({ min: 6 }),
+    body('name').isString().trim().notEmpty().withMessage('Name is required'),
+    body('enrollmentNumber').isString().trim().notEmpty().withMessage('Enrollment number is required'),
+    body('password').isString().isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+    body('rollNumber').isString().trim().notEmpty().withMessage('Roll number is required'),
+    body('branch').isString().isIn([
+      'Computer Science and Engineering',
+      'Electrical Engineering',
+      'Electronics',
+      'Civil Engineering',
+      'Mechanical Engineering'
+    ]).withMessage('Invalid branch selection'),
+    body('session').isString().trim().notEmpty().withMessage('Session is required'),
   ],
   addStudent
 );

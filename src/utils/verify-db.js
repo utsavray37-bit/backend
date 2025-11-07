@@ -42,15 +42,43 @@ async function verifyAndSeed() {
     if (studentCount === 0) {
       console.log('🔧 Creating default students...');
       await Student.create([
-        { name: 'Alice Johnson', enrollmentNumber: 'STU001', password: 'password123' },
-        { name: 'Bob Smith', enrollmentNumber: 'STU002', password: 'password123' },
-        { name: 'Charlie Brown', enrollmentNumber: 'STU003', password: 'password123' }
+        { 
+          name: 'Alice Johnson', 
+          enrollmentNumber: 'STU001', 
+          password: 'password123',
+          rollNumber: '2023CS001',
+          branch: 'Computer Science and Engineering',
+          session: '2023-2024'
+        },
+        { 
+          name: 'Bob Smith', 
+          enrollmentNumber: 'STU002', 
+          password: 'password123',
+          rollNumber: '2023EE001',
+          branch: 'Electrical Engineering',
+          session: '2023-2024'
+        },
+        { 
+          name: 'Charlie Brown', 
+          enrollmentNumber: 'STU003', 
+          password: 'password123',
+          rollNumber: '2023ME001',
+          branch: 'Mechanical Engineering',
+          session: '2023-2024'
+        }
       ]);
       console.log('✅ Students created: STU001, STU002, STU003 / password123');
     } else {
       const stu001 = await Student.findOne({ enrollmentNumber: 'STU001' });
       if (!stu001) {
-        await Student.create({ name: 'Alice Johnson', enrollmentNumber: 'STU001', password: 'password123' });
+        await Student.create({ 
+          name: 'Alice Johnson', 
+          enrollmentNumber: 'STU001', 
+          password: 'password123',
+          rollNumber: '2023CS001',
+          branch: 'Computer Science and Engineering',
+          session: '2023-2024'
+        });
         console.log('✅ Student created: STU001 / password123');
       }
     }

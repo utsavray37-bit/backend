@@ -166,7 +166,7 @@ export async function addStudent(req, res) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
   
-  const { name, enrollmentNumber, password } = req.body;
+  const { name, enrollmentNumber, password, rollNumber, branch, session } = req.body;
   
   // Check if enrollment number already exists
   const existing = await Student.findOne({ enrollmentNumber });
@@ -174,14 +174,24 @@ export async function addStudent(req, res) {
     return res.status(400).json({ message: 'Enrollment number already exists' });
   }
   
-  const student = await Student.create({ name, enrollmentNumber, password });
+  const student = await Student.create({ 
+    name, 
+    enrollmentNumber, 
+    password,
+    rollNumber,
+    branch,
+    session
+  });
   
   res.status(201).json({
     message: 'Student added successfully',
     student: {
       id: student._id,
       name: student.name,
-      enrollmentNumber: student.enrollmentNumber
+      enrollmentNumber: student.enrollmentNumber,
+      rollNumber: student.rollNumber,
+      branch: student.branch,
+      session: student.session
     }
   });
 }

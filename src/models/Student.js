@@ -20,6 +20,19 @@ const studentSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     enrollmentNumber: { type: String, required: true, unique: true, trim: true },
     password: { type: String, required: true, minlength: 6 },
+    rollNumber: { type: String, required: true, trim: true },
+    branch: { 
+      type: String, 
+      required: true,
+      enum: [
+        'Computer Science and Engineering',
+        'Electrical Engineering',
+        'Electronics',
+        'Civil Engineering',
+        'Mechanical Engineering'
+      ]
+    },
+    session: { type: String, required: true, trim: true },
     borrowedBooks: [borrowedBookSchema],
     
     // Gamification fields
