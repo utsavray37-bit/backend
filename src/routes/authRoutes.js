@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
-import { adminLogin, studentLogin, logout } from '../controllers/authController.js';
+import { adminLogin, studentLogin, logout, resetAdminPassword, resetStudentPassword } from '../controllers/authController.js';
 
 const router = Router();
 
@@ -17,6 +17,24 @@ router.post(
 );
 
 router.post('/logout', logout);
+
+router.post(
+  '/admin/reset-password',
+  [
+    body('email').isEmail(),
+    body('newPassword').isString().isLength({ min: 6 }),
+  ],
+  resetAdminPassword
+);
+
+router.post(
+  '/student/reset-password',
+  [
+    body('enrollmentNumber').isString(),
+    body('newPassword').isString().isLength({ min: 6 }),
+  ],
+  resetStudentPassword
+);
 
 export default router;
 

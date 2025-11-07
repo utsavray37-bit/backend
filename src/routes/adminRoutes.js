@@ -11,6 +11,8 @@ import {
   listBorrowed,
   listStudents,
   getStats,
+  addStudent,
+  deleteStudent,
 } from '../controllers/adminController.js';
 
 const router = Router();
@@ -53,6 +55,18 @@ router.post(
 router.get('/all-borrowed', listBorrowed);
 router.get('/students', listStudents);
 router.get('/stats', getStats);
+
+router.post(
+  '/students',
+  [
+    body('name').isString().trim().notEmpty(),
+    body('enrollmentNumber').isString().trim().notEmpty(),
+    body('password').isString().isLength({ min: 6 }),
+  ],
+  addStudent
+);
+
+router.delete('/students/:id', [param('id').isString()], deleteStudent);
 
 export default router;
 

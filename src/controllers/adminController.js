@@ -162,4 +162,44 @@ export async function getStats(req, res) {
   });
 }
 
+export async function addStudent(req, res) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+  
+  const { name, enrollmentNumber, password } = req.body;
+  
+  // Check if enrollment number already exists
+  const existing = await Student.findOne({ enrollmentNumber });
+  if (existing) {
+    return res.status(400).json({ message: 'Enrollment number already exists' });
+  }
+  
+  const student = await Student.create({ name, enrollmentNumber, password });
+  
+  res.status(201).json({
+    message: 'Student added successfully',
+    student: {
+      id: student._id,
+      name: student.name,
+      enrollmentNumber: student.enrollmentNumber
+    }
+  });
+}
+
+export async function deleteStudent(req, res) {
+  const { id } = req.params;
+  const student = await Student.findById(id);
+  
+  if (!student) return res.status(404).json({ message: 'Student not found' });
+  
+  // Check if student has borrowed books
+  const hasBorrowedBooks = student.borrowedBooks.some(b => b.status === 'borrowed');
+  if (hasBorrowedBooks) {
+    return res.status(400).json({ message: 'Cannot delete student with borrowed books' });
+  }
+  
+  await Student.findByIdAndDelete(id);
+  res.json({ message: 'Student deleted successfully' });
+}
+
 

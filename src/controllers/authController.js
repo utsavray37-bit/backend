@@ -45,4 +45,38 @@ export async function logout(req, res) {
   res.json({ message: 'Logged out' });
 }
 
+export async function resetAdminPassword(req, res) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+  
+  const { email, newPassword } = req.body;
+  const admin = await Admin.findOne({ email });
+  
+  if (!admin) {
+    return res.status(404).json({ message: 'Admin not found with this email' });
+  }
+  
+  admin.password = newPassword;
+  await admin.save();
+  
+  res.json({ message: 'Password reset successful. Please login with new password.' });
+}
+
+export async function resetStudentPassword(req, res) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+  
+  const { enrollmentNumber, newPassword } = req.body;
+  const student = await Student.findOne({ enrollmentNumber });
+  
+  if (!student) {
+    return res.status(404).json({ message: 'Student not found with this enrollment number' });
+  }
+  
+  student.password = newPassword;
+  await student.save();
+  
+  res.json({ message: 'Password reset successful. Please login with new password.' });
+}
+
 
