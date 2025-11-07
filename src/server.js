@@ -13,10 +13,28 @@ dotenv.config();
 const app = express();
 const isProduction = process.env.NODE_ENV === 'production';
 
+// Allow multiple origins for CORS
+const allowedOrigins = [
+  'http://localhost:5176',
+  'http://localhost:5175',
+  'http://localhost:5174',
+  'https://frontend-db0d.onrender.com',
+  process.env.CLIENT_ORIGIN
+].filter(Boolean);
+
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN || 'http://localhost:5174';
 
 app.use(cors({
-  origin: CLIENT_ORIGIN,
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());
